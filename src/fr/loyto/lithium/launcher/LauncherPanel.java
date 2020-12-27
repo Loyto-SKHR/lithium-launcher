@@ -5,10 +5,12 @@ import java.awt.Graphics;
 import java.awt.Image;
 
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
+import fr.litarvan.openauth.AuthenticationException;
 import fr.theshark34.openlauncherlib.launcher.util.UsernameSaver;
 import fr.theshark34.swinger.Swinger;
 import fr.theshark34.swinger.event.SwingerEvent;
@@ -64,7 +66,30 @@ public class LauncherPanel extends JPanel implements SwingerEventListener {
 	@Override
 	public void onEvent(SwingerEvent e) {
 		if(e.getSource() == playButton) {
-			System.out.println("test");
+			setFieldsEnabled(false);
+			
+			if(usernameField.getText().replaceAll(" ", "").length() == 0 || passwordField.getText().length() == 0 ) {
+				JOptionPane.showMessageDialog(this, "Erreur, veuillez entrez une addresse mail et un mot de passe valides.", "Erreur", JOptionPane.ERROR_MESSAGE);
+				setFieldsEnabled(true);
+				return;
+			}
+			
+			Thread t = new Thread() {
+				@Override
+				public void run() {
+					try {
+						Launcher.auth(usernameField.getText(), passwordField.getText());
+					} catch(AuthenticationException e) {
+						JOptionPane.showMessageDialog(LauncherPanel.this, "Erreur, impossible de se conecter: " + e.getErrorModel().getErrorMessage(), "Erreur", JOptionPane.ERROR_MESSAGE);
+						setFieldsEnabled(true);
+						return;
+					}
+					
+					System.out.println("Ca marche.");
+				}
+			};
+			
+			t.start();
 		} else if(e.getSource() == quitButton) {
 			System.exit(0);
 		} else if(e.getSource() == hideButton) {
@@ -77,5 +102,11 @@ public class LauncherPanel extends JPanel implements SwingerEventListener {
 		super.paintComponent(g);
 		
 		g.drawImage(background, 0, 0, this.getWidth(), this.getHeight(), this);
+	}
+	
+	private void setFieldsEnabled(boolean enabled) {
+		usernameField.setEnabled(enabled);
+		passwordField.setEnabled(enabled);
+		playButton.setEnabled(enabled);
 	}
 }
