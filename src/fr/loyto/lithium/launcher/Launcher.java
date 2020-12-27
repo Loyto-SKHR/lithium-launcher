@@ -40,7 +40,12 @@ public class Launcher {
 			
 			@Override
 			public void run() {
-				while(this.isInterrupted()) {
+				while(!this.isInterrupted()) {
+					if(BarAPI.getNumberOfFileToDownload() == 0) {
+						LauncherFrame.getInstance().getLaunchPanel().setInfoText("Vérification des fichiers");
+						continue;
+					}
+					
 					val = (int) (BarAPI.getNumberOfTotalDownloadedBytes() / 1000);
 					max = (int) (BarAPI.getNumberOfTotalBytesToDownload() / 1000);
 					
@@ -49,7 +54,7 @@ public class Launcher {
 					
 					LauncherFrame.getInstance().getLaunchPanel().setInfoText("Téléchrgement des fichiers " +
 							BarAPI.getNumberOfDownloadedFiles() + "/" + BarAPI.getNumberOfFileToDownload() +
-								" " + Swinger.percentage(val, max) + "");
+								" " + Swinger.percentage(val, max) + "%");
 				}
 			}
 		};
