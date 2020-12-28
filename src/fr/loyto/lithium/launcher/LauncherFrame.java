@@ -12,7 +12,7 @@ public class LauncherFrame extends JFrame {
 	private LauncherPanel launcherPanel;
 	
 	public LauncherFrame() {
-		this.setTitle("Lithium Launcher");
+		this.setTitle("Lithium");
 		this.setSize(975, 625);
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 		this.setLocationRelativeTo(null);
@@ -31,6 +31,8 @@ public class LauncherFrame extends JFrame {
 	public static void main(String[] args) {
 		Swinger.setSystemLookNFeel();
 		Swinger.setResourcePath("/fr/loyto/lithium/launcher/resources");
+		Launcher.LT_CRASHES_DIR.mkdirs();
+		
 		instance = new LauncherFrame();
 	}
 	

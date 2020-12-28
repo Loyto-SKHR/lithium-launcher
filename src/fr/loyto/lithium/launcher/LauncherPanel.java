@@ -3,6 +3,7 @@ package fr.loyto.lithium.launcher;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Image;
+import java.io.IOException;
 
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -98,13 +99,22 @@ public class LauncherPanel extends JPanel implements SwingerEventListener {
 						return;
 					}
 					
+					saver.setUsername(usernameField.getText());
+					
 					try {
 						Launcher.update();
 					} catch(Exception e) {
 						Launcher.interruptThread();
-						JOptionPane.showMessageDialog(LauncherPanel.this, "Erreur, impossible de mettre le jeu à jour: " + e, "Erreur", JOptionPane.ERROR_MESSAGE);
+						Launcher.getErrorUtil().catchError(e, "Impossible de mettre à jour Lithium!");
 						setFieldsEnabled(true);
 						return;
+					}
+					
+					try {
+						Launcher.launch();
+					} catch(IOException e) {
+						Launcher.getErrorUtil().catchError(e, "Impossible de lancer Lithium!");
+						setFieldsEnabled(true);
 					}
 					
 					System.out.println("Ca marche.");
