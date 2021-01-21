@@ -105,7 +105,7 @@ public class LauncherPanel extends JPanel implements SwingerEventListener {
 						Launcher.update();
 					} catch(Exception e) {
 						Launcher.interruptThread();
-						Launcher.getErrorUtil().catchError(e, "Impossible de mettre à jour Lithium!");
+						Launcher.getErrorUtil().catchError(e, "Impossible de mettre Ã  jour Lithium!");
 						setFieldsEnabled(true);
 						return;
 					}
@@ -116,8 +116,6 @@ public class LauncherPanel extends JPanel implements SwingerEventListener {
 						Launcher.getErrorUtil().catchError(e, "Impossible de lancer Lithium!");
 						setFieldsEnabled(true);
 					}
-					
-					System.out.println("Ca marche.");
 				}
 			};
 			
