@@ -13,7 +13,7 @@ import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 
-import fr.litarvan.openauth.AuthenticationException;
+import fr.holo.mineweb.auth.mineweb.AuthMineweb;
 import fr.theshark34.openlauncherlib.launcher.util.UsernameSaver;
 import fr.theshark34.swinger.Swinger;
 import fr.theshark34.swinger.colored.SColoredBar;
@@ -83,45 +83,44 @@ public class LauncherPanel extends JPanel implements SwingerEventListener {
 			setFieldsEnabled(false);
 			
 			if(usernameField.getText().replaceAll(" ", "").length() == 0 || passwordField.getText().length() == 0 ) {
-				JOptionPane.showMessageDialog(this, "Erreur, veuillez entrez une addresse mail et un mot de passe valides.", "Erreur", JOptionPane.ERROR_MESSAGE);
+				JOptionPane.showMessageDialog(this, "Erreur, veuillez entrez un pseudo et/ou un mot de passe valides.", "Erreur", JOptionPane.ERROR_MESSAGE);
 				setFieldsEnabled(true);
 				return;
 			}
 			
-			Thread t = new Thread() {
-				@Override
-				public void run() {
-					try {
-						Launcher.auth(usernameField.getText(), passwordField.getText());
-					} catch(AuthenticationException e) {
-						JOptionPane.showMessageDialog(LauncherPanel.this, "Erreur, impossible de se conecter: " + e.getErrorModel().getErrorMessage(), "Erreur", JOptionPane.ERROR_MESSAGE);
-						setFieldsEnabled(true);
-						return;
-					}
-					
-					saver.setUsername(usernameField.getText());
-					
-					try {
-						Launcher.update();
-					} catch(Exception e) {
-						Launcher.interruptThread();
-						Launcher.getErrorUtil().catchError(e, "Impossible de mettre à jour Lithium!");
-						setFieldsEnabled(true);
-						return;
-					}
-					
-					try {
-						Launcher.launch();
-					} catch(IOException e) {
-						Launcher.getErrorUtil().catchError(e, "Impossible de lancer Lithium!");
-						setFieldsEnabled(true);
-					}
-					
-					System.out.println("Ca marche.");
-				}
-			};
+			Launcher.auth(usernameField.getText(), passwordField.getText());
 			
-			t.start();
+			if (AuthMineweb.isConnected()) {
+				Thread t = new Thread() {
+					@Override
+					public void run() {
+					
+						saver.setUsername(usernameField.getText());
+						
+						try {
+							Launcher.update();
+						} catch(Exception e) {
+							Launcher.interruptThread();
+							Launcher.getErrorUtil().catchError(e, "Impossible de mettre à jour Lithium!");
+							setFieldsEnabled(true);
+							return;
+						}
+					
+						try {
+							Launcher.launch();
+						} catch(IOException e) {
+							Launcher.getErrorUtil().catchError(e, "Impossible de lancer Lithium!");
+							setFieldsEnabled(true);
+						}
+					}
+				};
+				
+				t.start();
+			}
+			else {
+				setFieldsEnabled(true);
+				JOptionPane.showMessageDialog(this, "Erreur, veuillez entrez un pseudo et/ou un mot de passe valides.", "Erreur", JOptionPane.ERROR_MESSAGE);
+			}
 		} else if(e.getSource() == quitButton) {
 			System.exit(0);
 		} else if(e.getSource() == hideButton) {

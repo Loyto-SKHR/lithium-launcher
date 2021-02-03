@@ -3,11 +3,11 @@ package fr.loyto.lithium.launcher;
 import java.io.File;
 import java.io.IOException;
 
-import fr.litarvan.openauth.AuthPoints;
-import fr.litarvan.openauth.AuthenticationException;
-import fr.litarvan.openauth.Authenticator;
-import fr.litarvan.openauth.model.AuthAgent;
-import fr.litarvan.openauth.model.response.AuthResponse;
+import fr.holo.mineweb.auth.exception.DataEmptyException;
+import fr.holo.mineweb.auth.exception.DataWrongException;
+import fr.holo.mineweb.auth.exception.ServerNotFoundException;
+import fr.holo.mineweb.auth.mineweb.AuthMineweb;
+import fr.holo.mineweb.auth.mineweb.utils.TypeConnection;
 import fr.theshark34.openlauncherlib.launcher.AuthInfos;
 import fr.theshark34.openlauncherlib.launcher.GameFolder;
 import fr.theshark34.openlauncherlib.launcher.GameInfos;
@@ -33,10 +33,19 @@ public class Launcher {
 	
 	private static ErrorUtil errorUtil = new ErrorUtil(LT_CRASHES_DIR);
 	
-	public static void auth(String username, String password) throws AuthenticationException {
-		Authenticator authenticator = new Authenticator(Authenticator.MOJANG_AUTH_URL, AuthPoints.NORMAL_AUTH_POINTS);
-		AuthResponse response = authenticator.authenticate(AuthAgent.MINECRAFT, username, password, "");
-		authInfos = new AuthInfos(response.getSelectedProfile().getName(), response.getAccessToken(), response.getSelectedProfile().getId());
+	public static void auth(String username, String password) {
+
+		AuthMineweb.setTypeConnection(TypeConnection.launcher);
+		AuthMineweb.setUrlRoot("https://lithium-mc.tk/");
+		AuthMineweb.setUsername(username);
+		AuthMineweb.setPassword(password);
+		try {
+			AuthMineweb.auth();
+		} catch (DataWrongException | DataEmptyException | ServerNotFoundException | IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		authInfos = new AuthInfos(username, "dry", "none");
 	}
 	
 	public static void update() throws Exception {

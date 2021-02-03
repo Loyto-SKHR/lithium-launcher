@@ -6,10 +6,10 @@
 			<attribute name="module" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="C:/Users/Moi/Downloads/openauth-1.0.4.jar"/>
 	<classpathentry kind="lib" path="C:/Users/Moi/Downloads/gson-2.8.6.jar"/>
 	<classpathentry kind="lib" path="C:/Users/Moi/Downloads/swinger-1.0.0-BETA.jar"/>
 	<classpathentry kind="lib" path="C:/Users/Moi/Downloads/openlauncherlib-2.1-SNAPSHOT.jar"/>
 	<classpathentry kind="lib" path="C:/Users/Moi/Downloads/s-update-3.0.0-BETA.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Moi/Downloads/AuthMineweb_1.4.0.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
